@@ -8,8 +8,8 @@ import (
 )
 
 func TestSetLocale(t *testing.T) {
-	setLocale("POSIX")
-	assert.Equal(t, "POSIX", getLocale())
+	setLocale("en_US.utf8")
+	assert.Equal(t, "en_US.utf8", getLocale())
 	setLocale("C")
 	assert.Equal(t, "C", getLocale())
 }
