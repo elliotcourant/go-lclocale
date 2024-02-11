@@ -7,11 +7,36 @@ import (
 )
 
 var (
+	shortLocales     = []string{}
 	installedLocales = []string{}
 )
 
 func init() {
-	installedLocales = listLocales()
+	locales := listLocales()
+	for i := range locales {
+		locale := locales[i]
+		if err := setLocale(locale); err != nil {
+			// Locale is not installed!
+			continue
+		}
+
+		installedLocales = append(installedLocales, locale)
+	}
+	dedupe := map[string]struct{}{}
+	for i := range installedLocales {
+		locale := installedLocales[i]
+		parts := strings.SplitN(locale, ".", 2)
+		dedupe[parts[0]] = struct{}{}
+	}
+	shortLocales = make([]string, 0, len(dedupe))
+	for locale := range dedupe {
+		shortLocales = append(shortLocales, locale)
+	}
+	sort.Strings(shortLocales)
+}
+
+func GetInstalledLocales() []string {
+	return shortLocales
 }
 
 func adjustLocale(input string) string {
