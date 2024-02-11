@@ -69,11 +69,13 @@ type LConv struct {
 // `en_US.utf8` on Linux or `en_US.UTF-8` on Darwin depending on what base
 // locales are installed on the system.
 func GetLConv(locale string) (*LConv, error) {
-	localeMutex.Lock()
-	defer localeMutex.Unlock()
-
 	adjusted := adjustLocale(locale)
 
+	// Because setLocale affects the entire process, we need to lock this whenever
+	// we change the locale. This way we know that the local has been set to the
+	// one we need and will not change while we are working with it.
+	localeMutex.Lock()
+	defer localeMutex.Unlock()
 	if err := setLocale(adjusted); err != nil {
 		return nil, err
 	}
