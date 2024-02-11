@@ -8,14 +8,18 @@ import (
 )
 
 func TestSetLocale(t *testing.T) {
-	setLocale("en_US.utf8")
-	assert.Equal(t, "en_US.utf8", getLocale())
-	setLocale("C")
+	err := setLocale("bogus")
+	assert.EqualError(t, err, "failed to set locale to: bogus")
+
+	err = setLocale("C")
+	assert.NoError(t, err, "should be able to set locale to C")
 	assert.Equal(t, "C", getLocale())
 }
 
 func TestLocaleConv(t *testing.T) {
-	setLocale("C")
+	err := setLocale("C")
+	assert.NoError(t, err, "should be able to set locale to C")
 	result := localeconv()
+	assert.NotEmpty(t, result, "resulting lconv should not be empty")
 	fmt.Println(result)
 }

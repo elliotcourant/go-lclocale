@@ -5,12 +5,19 @@ package locale
 #include <locale.h>
 */
 import "C"
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
 
-func setLocale(locale string) {
+func setLocale(locale string) error {
 	cLocale := C.CString(locale)
 	defer C.free(unsafe.Pointer(cLocale))
-	C.setlocale(C.LC_ALL, cLocale)
+	res := C.GoString(C.setlocale(C.LC_ALL, cLocale))
+	if res == "" {
+		return fmt.Errorf("failed to set locale to: %s", locale)
+	}
+	return nil
 }
 
 func getLocale() string {

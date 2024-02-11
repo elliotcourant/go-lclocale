@@ -3,6 +3,7 @@
 package locale
 
 import (
+	"strings"
 	"syscall"
 	"unsafe"
 )
@@ -24,7 +25,14 @@ func listLocales() []string {
 	) uintptr {
 		// Convert the UTF-16 string provided by the API to a Go string
 		localeStr := syscall.UTF16ToString((*[1 << 29]uint16)(unsafe.Pointer(locale))[:])
-		locales = append(locales, localeStr)
+
+		// If the locale is something like `ar` then skip it, we need the two or
+		// three part locales like en-US and others
+		if !strings.Contains(localeStr, "-") {
+			return 1
+		}
+
+		locales = append(locales, strings.Replace(localeStr, "-", "_"))
 		return 1 // Returning 1 continues enumeration
 	}
 
