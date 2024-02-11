@@ -8,14 +8,14 @@ import (
 )
 
 func TestSetLocale(t *testing.T) {
-	setLocale("en_US")
-	assert.Equal(t, "en_US", getLocale())
-	setLocale("da_DK")
-	assert.Equal(t, "da_DK", getLocale())
+	setLocale("POSIX")
+	assert.Equal(t, "POSIX", getLocale())
+	setLocale("C")
+	assert.Equal(t, "C", getLocale())
 }
 
 func TestLocaleConv(t *testing.T) {
-	setLocale("en_US")
+	setLocale("C")
 	result := localeconv()
 	fmt.Println(result)
 }
