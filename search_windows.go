@@ -24,7 +24,7 @@ func listLocales() []string {
 	) uintptr {
 		// Convert the UTF-16 string provided by the API to a Go string
 		localeStr := syscall.UTF16ToString((*[1 << 29]uint16)(unsafe.Pointer(locale))[:])
-		locales = append(locals, localeStr)
+		locales = append(locales, localeStr)
 		return 1 // Returning 1 continues enumeration
 	}
 
