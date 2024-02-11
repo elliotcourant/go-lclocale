@@ -1,3 +1,5 @@
+//go:build !wasm
+
 package locale
 
 // SignPosition dictates where the negative and positive sign symbols should be
