@@ -14,5 +14,6 @@ func TestGetLConv(t *testing.T) {
 		assert.Equal(t, []byte("."), lconv.DecimalPoint)
 		assert.Equal(t, []byte(","), lconv.ThousandsSep)
 		assert.Equal(t, []byte("$"), lconv.CurrencySymbol)
+		assert.EqualValues(t, 2, lconv.FracDigits)
 	})
 }

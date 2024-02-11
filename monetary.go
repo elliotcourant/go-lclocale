@@ -1,15 +1,26 @@
 package locale
 
+// SignPosition dictates where the negative and positive sign symbols should be
+// placed when formatting a number or monetary amount as a string for a given
+// locale.
 type SignPosition uint8
 
 const (
-	SignPositionParentheses                 SignPosition = 0
+	// Parentheses should surround the quantity and currency symbol.
+	SignPositionParentheses SignPosition = 0
+	// The sign string should precede the quantity and currency symbol.
 	SignPositionPreceedsQuantityAndCurrency SignPosition = 1
+	// The sign string should succeed the quantity and currency symbol.
 	SignPositionSucceedsQuantityAndCurrency SignPosition = 2
+	// The sign string should immediately precede the currency symbol.
 	SignPositionImmediatelyPreceedsCurrency SignPosition = 3
+	// The sign string should immediately succeed the currency symbol.
 	SignPositionImmediatelysucceedsCurrency SignPosition = 4
 )
 
+// LConv contains the numeric and monetary information for a given locale. This
+// data can be used to parse or properly format numbers or monetary amounts to
+// that locales specification.
 type LConv struct {
 	// Radix character.
 	DecimalPoint []byte
@@ -51,6 +62,12 @@ type LConv struct {
 	NSignPosn   SignPosition
 }
 
+// GetLConv will query the current installed locales on the host system and
+// return the lconv data for the specified locale if it is installed. If the
+// locale is not installed then an error is returned. The locale name may be
+// adjusted to make calling easier. For example; `en_US` may be corrected to
+// `en_US.utf8` on Linux or `en_US.UTF-8` on Darwin depending on what base
+// locales are installed on the system.
 func GetLConv(locale string) (*LConv, error) {
 	localeMutex.Lock()
 	defer localeMutex.Unlock()

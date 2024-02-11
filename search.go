@@ -35,6 +35,10 @@ func init() {
 	sort.Strings(shortLocales)
 }
 
+// GetInstalledLocales will return an array of locales that are accepted by the
+// other locale functions in this package for the current host system. The
+// locale names returned here are standardized into a format such as `en_US` and
+// will not include the unicode suffix.
 func GetInstalledLocales() []string {
 	return shortLocales
 }
