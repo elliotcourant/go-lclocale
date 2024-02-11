@@ -6,6 +6,35 @@ import (
 	"strings"
 )
 
+var (
+	installedLocales = []string{}
+)
+
+func init() {
+	installedLocales = listLocales()
+}
+
+func adjustLocale(input string) string {
+	result := input
+	lowerInput := strings.ToLower(input)
+	for i := range installedLocales {
+		locale := installedLocales[i]
+		if strings.EqualFold(locale, input) {
+			return result
+		}
+		lowerLocale := strings.ToLower(locale)
+
+		// If this locale has the input as a prefix then stage this locale to be
+		// returned. This would be like if we had en_US as an input but en_US.UTF-8
+		// is installed.
+		if strings.HasPrefix(lowerLocale, lowerInput) {
+			result = locale
+		}
+	}
+
+	return result
+}
+
 func listLocalesCommand() []string {
 	cmd := exec.Command("locale", "-a")
 	output, err := cmd.Output()

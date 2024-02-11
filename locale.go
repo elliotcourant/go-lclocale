@@ -7,7 +7,12 @@ package locale
 import "C"
 import (
 	"fmt"
+	"sync"
 	"unsafe"
+)
+
+var (
+	localeMutex = sync.Mutex{}
 )
 
 func setLocale(locale string) error {
@@ -26,25 +31,6 @@ func getLocale() string {
 	return currentLocale
 }
 
-type LConv struct {
-	DecimalPoint    []byte
-	ThousandsSep    []byte
-	Grouping        []byte
-	IntCurrSymbol   []byte
-	CurrencySymbol  []byte
-	MonDecimalPoint []byte
-	MonThousandsSep []byte
-	MonGrouping     []byte
-	PositiveSign    []byte
-	NegativeSign    []byte
-	PCSPrecedes     bool
-	PSepBySpace     bool
-	NCSPrecedes     bool
-	NSepBySpace     bool
-	PSignPosn       uint8
-	NSignPosn       uint8
-}
-
 func localeconv() LConv {
 	clconv := C.localeconv()
 
@@ -59,12 +45,14 @@ func localeconv() LConv {
 		MonGrouping:     []byte(C.GoString(clconv.mon_grouping)),
 		PositiveSign:    []byte(C.GoString(clconv.positive_sign)),
 		NegativeSign:    []byte(C.GoString(clconv.negative_sign)),
+		IntFracDigits:   uint8(C.char(clconv.int_frac_digits)),
+		FracDigits:      uint8(C.char(clconv.frac_digits)),
 		PCSPrecedes:     byte(C.char(clconv.p_cs_precedes)) == byte(1),
 		PSepBySpace:     byte(C.char(clconv.p_sep_by_space)) == byte(1),
 		NCSPrecedes:     byte(C.char(clconv.n_cs_precedes)) == byte(1),
 		NSepBySpace:     byte(C.char(clconv.n_sep_by_space)) == byte(1),
-		PSignPosn:       uint8(C.char(clconv.p_sign_posn)),
-		NSignPosn:       uint8(C.char(clconv.n_sign_posn)),
+		PSignPosn:       SignPosition(C.char(clconv.p_sign_posn)),
+		NSignPosn:       SignPosition(C.char(clconv.n_sign_posn)),
 	}
 
 	return lconv
