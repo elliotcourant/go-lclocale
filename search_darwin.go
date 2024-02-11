@@ -19,6 +19,10 @@ func listLocales() []string {
 	dedupe := map[string]struct{}{}
 	for i := range locales {
 		locale := locales[i]
+		locale = strings.TrimSpace(locale)
+		if locale == "" {
+			continue
+		}
 		parts := strings.SplitN(locale, ".", 2)
 
 		// Trim things like the unicode suffix.
