@@ -1,5 +1,3 @@
-//go:build darwin
-
 package locale
 
 import (
@@ -8,7 +6,7 @@ import (
 	"strings"
 )
 
-func listLocales() []string {
+func listLocalesCommand() []string {
 	cmd := exec.Command("locale", "-a")
 	output, err := cmd.Output()
 	if err != nil {

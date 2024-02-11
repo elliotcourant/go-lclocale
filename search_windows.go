@@ -3,6 +3,7 @@
 package locale
 
 import (
+	"os/exec"
 	"strings"
 	"syscall"
 	"unsafe"
@@ -17,6 +18,11 @@ var (
 )
 
 func listLocales() []string {
+	path, err := exec.LookPath("locale")
+	if err == nil && path != "" {
+		return listLocalesCommand()
+	}
+
 	locales := make([]string, 0)
 	enumLocalesCallback := func(
 		locale *uint16,
