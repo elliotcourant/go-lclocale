@@ -21,14 +21,8 @@ func listLocalesCommand() []string {
 		if locale == "" {
 			continue
 		}
-		parts := strings.SplitN(locale, ".", 2)
 
-		// Trim things like the unicode suffix.
-		if len(parts) > 1 {
-			dedupe[parts[0]] = struct{}{}
-		} else {
-			dedupe[locale] = struct{}{}
-		}
+		dedupe[locale] = struct{}{}
 	}
 	locales = make([]string, 0, len(dedupe))
 	for locale := range dedupe {
