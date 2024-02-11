@@ -14,7 +14,7 @@ func setLocale(locale string) error {
 	cLocale := C.CString(locale)
 	defer C.free(unsafe.Pointer(cLocale))
 	res := C.GoString(C.setlocale(C.LC_ALL, cLocale))
-	if res == "" {
+	if res != locale {
 		return fmt.Errorf("failed to set locale to: %s", locale)
 	}
 	return nil
