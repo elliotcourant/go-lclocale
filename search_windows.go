@@ -32,7 +32,7 @@ func listLocales() []string {
 			return 1
 		}
 
-		locales = append(locales, strings.Replace(localeStr, "-", "_"))
+		locales = append(locales, strings.ReplaceAll(localeStr, "-", "_"))
 		return 1 // Returning 1 continues enumeration
 	}
 
