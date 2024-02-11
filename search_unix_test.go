@@ -1,5 +1,3 @@
-//go:build windows
-
 package locale
 
 import (
@@ -7,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestListLocalesWindows(t *testing.T) {
+func TestListLocalesUnix(t *testing.T) {
 	knownLocales := listLocales()
 	for i := range knownLocales {
 		knownLocal := knownLocales[i]
