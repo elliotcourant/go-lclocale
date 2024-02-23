@@ -9,6 +9,7 @@ package locale
 import "C"
 import (
 	"fmt"
+	"strings"
 	"sync"
 	"unsafe"
 )
@@ -22,17 +23,17 @@ var (
 // either not valid or not installed then this will return false.
 func Valid(locale string) bool {
 	adjusted := adjustLocale(locale)
-
-	// Because setLocale affects the entire process, we need to lock this whenever
-	// we change the locale. This way we know that the local has been set to the
-	// one we need and will not change while we are working with it.
-	localeMutex.Lock()
-	defer localeMutex.Unlock()
-	if err := setLocale(adjusted); err != nil {
+	if adjusted == "" {
 		return false
 	}
 
-	return true
+	for _, installed := range installedLocales {
+		if strings.EqualFold(installed, adjusted) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func setLocale(locale string) error {

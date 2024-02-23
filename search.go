@@ -46,7 +46,7 @@ func GetInstalledLocales() []string {
 }
 
 func adjustLocale(input string) string {
-	result := input
+	result := strings.TrimSpace(input)
 	lowerInput := strings.ToLower(input)
 	for i := range installedLocales {
 		locale := installedLocales[i]

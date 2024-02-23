@@ -2,6 +2,8 @@
 
 package locale
 
+import "errors"
+
 // SignPosition dictates where the negative and positive sign symbols should be
 // placed when formatting a number or monetary amount as a string for a given
 // locale.
@@ -72,6 +74,9 @@ type LConv struct {
 // locales are installed on the system.
 func GetLConv(locale string) (*LConv, error) {
 	adjusted := adjustLocale(locale)
+	if adjusted == "" {
+		return nil, errors.New("locale cannot be blank")
+	}
 
 	// Because setLocale affects the entire process, we need to lock this whenever
 	// we change the locale. This way we know that the local has been set to the
