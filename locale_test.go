@@ -32,6 +32,6 @@ func TestValid(t *testing.T) {
 	})
 
 	t.Run("invalid", func(t *testing.T) {
-		assert.False(t, Valid("00-00"), "not a real locale, should not be valid")
+		assert.False(t, Valid("uh-UH"), "not a real locale, should not be valid")
 	})
 }
