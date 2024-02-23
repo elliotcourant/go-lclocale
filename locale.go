@@ -17,6 +17,24 @@ var (
 	localeMutex = sync.Mutex{}
 )
 
+// Valid takes a locale code and will check to see if it is installed on the
+// current system. If it is then it will return true. If the locale specified is
+// either not valid or not installed then this will return false.
+func Valid(locale string) bool {
+	adjusted := adjustLocale(locale)
+
+	// Because setLocale affects the entire process, we need to lock this whenever
+	// we change the locale. This way we know that the local has been set to the
+	// one we need and will not change while we are working with it.
+	localeMutex.Lock()
+	defer localeMutex.Unlock()
+	if err := setLocale(adjusted); err != nil {
+		return false
+	}
+
+	return true
+}
+
 func setLocale(locale string) error {
 	cLocale := C.CString(locale)
 	defer C.free(unsafe.Pointer(cLocale))

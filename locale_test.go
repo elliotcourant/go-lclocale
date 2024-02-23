@@ -25,3 +25,13 @@ func TestLocaleConv(t *testing.T) {
 	assert.NotEmpty(t, result, "resulting lconv should not be empty")
 	fmt.Println(result)
 }
+
+func TestValid(t *testing.T) {
+	t.Run("valid", func(t *testing.T) {
+		assert.True(t, Valid("C"), "C should always be valid")
+	})
+
+	t.Run("invalid", func(t *testing.T) {
+		assert.False(t, Valid("uh-UH"), "not a real locale, should not be valid")
+	})
+}
