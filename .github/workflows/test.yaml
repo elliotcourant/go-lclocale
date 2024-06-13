@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Golang
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5
 
       - name: Checkout code
         uses: actions/checkout@v2
