@@ -2,7 +2,15 @@
 
 package locale
 
-import "errors"
+import (
+	"errors"
+	"sync"
+)
+
+var (
+	localeCache      = map[string]LConv{}
+	localeCacheMutex = sync.RWMutex{}
+)
 
 // SignPosition dictates where the negative and positive sign symbols should be
 // placed when formatting a number or monetary amount as a string for a given
@@ -78,6 +86,14 @@ func GetLConv(locale string) (*LConv, error) {
 		return nil, errors.New("locale cannot be blank")
 	}
 
+	// Check to see if we have already read this locale.
+	localeCacheMutex.RLock()
+	result, ok := localeCache[adjusted]
+	localeCacheMutex.RUnlock()
+	if ok {
+		return &result, nil
+	}
+
 	// Because setLocale affects the entire process, we need to lock this whenever
 	// we change the locale. This way we know that the local has been set to the
 	// one we need and will not change while we are working with it.
@@ -87,6 +103,12 @@ func GetLConv(locale string) (*LConv, error) {
 		return nil, err
 	}
 
-	result := localeconv()
+	// If we were able to set the locale to the one specified that means the
+	// system has locale data for it stored and we can read it. When we do, store
+	// the data in the cache so we don't need to do C calls again the next time.
+	result = localeconv()
+	localeCacheMutex.Lock()
+	localeCache[adjusted] = result
+	localeCacheMutex.Unlock()
 	return &result, nil
 }
