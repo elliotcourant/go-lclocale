@@ -33,7 +33,7 @@ func TestLocaleConv(t *testing.T) {
 
 func TestValid(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
-		assert.True(t, Valid("C"), "C should always be valid")
+		assert.True(t, Valid("en_US"), "en_US should always be valid")
 	})
 
 	t.Run("invalid", func(t *testing.T) {
