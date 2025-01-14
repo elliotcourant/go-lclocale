@@ -99,7 +99,7 @@ func GetLConv(locale string) (*LConv, error) {
 	// one we need and will not change while we are working with it.
 	localeMutex.Lock()
 	defer localeMutex.Unlock()
-	if err := setLocale(adjusted); err != nil {
+	if _, err := setlocale(adjusted); err != nil {
 		return nil, err
 	}
 

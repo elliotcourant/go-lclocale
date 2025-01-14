@@ -17,7 +17,7 @@ func init() {
 	locales := listLocales()
 	for i := range locales {
 		locale := locales[i]
-		if err := setLocale(locale); err != nil {
+		if _, err := setlocale(locale); err != nil {
 			// Locale is not installed!
 			continue
 		}

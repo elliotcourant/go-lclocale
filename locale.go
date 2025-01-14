@@ -36,20 +36,25 @@ func Valid(locale string) bool {
 	return false
 }
 
-func setLocale(locale string) error {
+func setlocale(locale string) (string, error) {
+	// Passing an empty locale will return the current locale the thread is using.
+	if locale == "" {
+		ptr := C.setlocale(C.LC_ALL, nil)
+		currentLocale := C.GoString(ptr)
+		return currentLocale, nil
+	}
+
+	// Otherwise we can send the specified locale directly.
 	cLocale := C.CString(locale)
 	defer C.free(unsafe.Pointer(cLocale))
-	res := C.GoString(C.setlocale(C.LC_ALL, cLocale))
-	if res != locale {
-		return fmt.Errorf("failed to set locale to: %s", locale)
+	result := C.GoString(C.setlocale(C.LC_ALL, cLocale))
+	// If the resulting locale code matches our input then we were able to
+	// successfully switch locales, otherwise the specified locale is likely not
+	// installed on this system.
+	if result != locale {
+		return "", fmt.Errorf("failed to set locale to: %s", locale)
 	}
-	return nil
-}
-
-func getLocale() string {
-	ptr := C.setlocale(C.LC_ALL, nil)
-	currentLocale := C.GoString(ptr)
-	return currentLocale
+	return result, nil
 }
 
 func localeconv() LConv {
