@@ -4,9 +4,12 @@ package locale
 
 import (
 	"os/exec"
+	"regexp"
 	"sort"
 	"strings"
 )
+
+var localePattern = regexp.MustCompile(`(?P<language>[[:alpha:]]{2,3})(?:[-_]?)(?P<country>[[:alpha:]]{2})(?:.?)(?P<encoding>\S+)?`)
 
 var (
 	shortLocales     = []string{}
@@ -66,6 +69,9 @@ func adjustLocale(input string) string {
 	return result
 }
 
+// listLocalesCommand is a way to list installed locales on all operating
+// systems. However on Windows, if this command is not available then we will
+// fallback to doing on OS function call to list locales.
 func listLocalesCommand() []string {
 	cmd := exec.Command("locale", "-a")
 	output, err := cmd.Output()
