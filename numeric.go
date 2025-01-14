@@ -2,10 +2,49 @@
 
 package locale
 
+/*
+#include <stdlib.h>
+#include <locale.h>
+*/
+import "C"
 import (
 	"errors"
 	"sync"
 )
+
+func localeconv() LConv {
+	clconv := C.localeconv()
+
+	lconv := LConv{
+		// Non-monetary numeric formatting parameters
+		DecimalPoint: []byte(C.GoString(clconv.decimal_point)),
+		ThousandsSep: []byte(C.GoString(clconv.thousands_sep)),
+		Grouping:     []byte(C.GoString(clconv.grouping)),
+
+		// Monetary- numeric formatting parameters
+		MonDecimalPoint: []byte(C.GoString(clconv.mon_decimal_point)),
+		MonThousandsSep: []byte(C.GoString(clconv.mon_thousands_sep)),
+		MonGrouping:     []byte(C.GoString(clconv.mon_grouping)),
+		PositiveSign:    []byte(C.GoString(clconv.positive_sign)),
+		NegativeSign:    []byte(C.GoString(clconv.negative_sign)),
+
+		// Local monetary numeric formatting parameters
+		CurrencySymbol: []byte(C.GoString(clconv.currency_symbol)),
+		FracDigits:     uint8(C.char(clconv.frac_digits)),
+		PCSPrecedes:    byte(C.char(clconv.p_cs_precedes)) == byte(1),
+		NCSPrecedes:    byte(C.char(clconv.n_cs_precedes)) == byte(1),
+		PSepBySpace:    byte(C.char(clconv.p_sep_by_space)) == byte(1),
+		NSepBySpace:    byte(C.char(clconv.n_sep_by_space)) == byte(1),
+		PSignPosn:      SignPosition(C.char(clconv.p_sign_posn)),
+		NSignPosn:      SignPosition(C.char(clconv.n_sign_posn)),
+
+		// International monetary numeric formatting parameters
+		IntCurrSymbol: []byte(C.GoString(clconv.int_curr_symbol)),
+		IntFracDigits: uint8(C.char(clconv.int_frac_digits)),
+	}
+
+	return lconv
+}
 
 var (
 	localeCache      = map[string]LConv{}

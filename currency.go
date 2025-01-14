@@ -30,6 +30,6 @@ var (
 	ErrCurrencyNotSupported = errors.New("currency not supported")
 )
 
-func GetCurrency(currencyCode string) (*Currency, error) {
-
-}
+// func GetCurrency(currencyCode string) (*Currency, error) {
+//
+// }
