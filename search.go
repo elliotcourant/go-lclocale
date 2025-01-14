@@ -3,6 +3,7 @@
 package locale
 
 import (
+	"bytes"
 	"fmt"
 	"os/exec"
 	"regexp"
@@ -20,6 +21,9 @@ var (
 	// localeMapping contains the short locale code like en_US to the code that
 	// the system is using, which may be en_US.UTF-8 or something else.
 	localeMapping = map[string]string{}
+	// currencyMapping is a map keyed by the international currency code with the
+	// value being an array of locale's that use that currency.
+	currencyMapping = map[string][]string{}
 )
 
 func init() {
@@ -58,6 +62,18 @@ func init() {
 		shortCode := fmt.Sprintf("%s_%s", grouped["language"], grouped["country"])
 		installedLocales = append(installedLocales, shortCode)
 		localeMapping[shortCode] = locale
+
+		currency, err := GetLConv(shortCode)
+		if err != nil {
+			continue
+		}
+
+		currencyCode := string(bytes.TrimSpace(currency.IntCurrSymbol))
+		if currencyLocales, ok := currencyMapping[currencyCode]; ok {
+			currencyMapping[currencyCode] = append(currencyLocales, shortCode)
+		} else {
+			currencyMapping[currencyCode] = []string{shortCode}
+		}
 	}
 	sort.Strings(installedLocales)
 }
