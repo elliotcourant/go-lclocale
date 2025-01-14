@@ -9,7 +9,10 @@ import (
 	"strings"
 )
 
-var localePattern = regexp.MustCompile(`(?P<language>[[:alpha:]]{2,3})(?:[-_]?)(?P<country>[[:alpha:]]{2})(?:.?)(?P<encoding>\S+)?`)
+var (
+	localePattern = regexp.MustCompile(`(?P<language>[[:alpha:]]{2,3})(?:[-_]?)(?P<country>[[:alpha:]]{2})(?:.?)(?P<encoding>\S+)?`)
+	utf8Pattern   = regexp.MustCompile(`(?<utf8>[uU][tT][fF].?[8])`)
+)
 
 var (
 	shortLocales     = []string{}
