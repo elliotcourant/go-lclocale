@@ -95,7 +95,15 @@ func adjustLocale(input string) string {
 		}
 	}
 
-	return fmt.Sprintf("%s_%s", grouped["language"], grouped["country"])
+	localeCleaned := fmt.Sprintf("%s_%s", grouped["language"], grouped["country"])
+	// The locale cleaned does not contain an encoding, so check our mapping to
+	// see what the locale code should be with an encoding suffix. If we have one
+	// use that otherwise use the provided locale code.
+	if original, ok := localeMapping[localeCleaned]; ok {
+		return original
+	}
+
+	return localeCleaned
 }
 
 // listLocalesCommand is a way to list installed locales on all operating

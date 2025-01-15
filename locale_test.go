@@ -12,7 +12,7 @@ import (
 func TestSetLocale(t *testing.T) {
 	locale, err := setlocale("bogus")
 	assert.Empty(t, locale, "returned locale should be empty")
-	assert.EqualError(t, err, "failed to set locale to: bogus")
+	assert.EqualError(t, err, "failed to set locale, wanted: [bogus] got: []")
 
 	locale, err = setlocale("C")
 	assert.Equal(t, "C", locale, "returned locale should match input")
@@ -24,19 +24,11 @@ func TestSetLocale(t *testing.T) {
 }
 
 func TestLocaleConv(t *testing.T) {
-	_, err := setlocale("C")
-	assert.NoError(t, err, "should be able to set locale to C")
-	result := localeconv()
-	assert.NotEmpty(t, result, "resulting lconv should not be empty")
-	fmt.Println(result)
-}
-
-func TestValid(t *testing.T) {
-	t.Run("valid", func(t *testing.T) {
-		assert.True(t, Valid("en_US"), "en_US should always be valid")
-	})
-
-	t.Run("invalid", func(t *testing.T) {
-		assert.False(t, Valid("uh-UH"), "not a real locale, should not be valid")
+	t.Run("C", func(t *testing.T) {
+		_, err := setlocale("C")
+		assert.NoError(t, err, "should be able to set locale to C")
+		result := localeconv()
+		assert.NotEmpty(t, result, "resulting lconv should not be empty")
+		fmt.Println(result)
 	})
 }

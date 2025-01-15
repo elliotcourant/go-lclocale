@@ -9,7 +9,6 @@ package locale
 import "C"
 import (
 	"fmt"
-	"strings"
 	"sync"
 	"unsafe"
 )
@@ -17,24 +16,6 @@ import (
 var (
 	localeMutex = sync.Mutex{}
 )
-
-// Valid takes a locale code and will check to see if it is installed on the
-// current system. If it is then it will return true. If the locale specified is
-// either not valid or not installed then this will return false.
-func Valid(locale string) bool {
-	adjusted := adjustLocale(locale)
-	if adjusted == "" {
-		return false
-	}
-
-	for _, installed := range installedLocales {
-		if strings.EqualFold(installed, adjusted) {
-			return true
-		}
-	}
-
-	return false
-}
 
 func setlocale(locale string) (string, error) {
 	// Passing an empty locale will return the current locale the thread is using.
@@ -52,7 +33,7 @@ func setlocale(locale string) (string, error) {
 	// successfully switch locales, otherwise the specified locale is likely not
 	// installed on this system.
 	if result != locale {
-		return "", fmt.Errorf("failed to set locale to: %s", locale)
+		return "", fmt.Errorf("failed to set locale, wanted: [%s] got: [%s]", locale, result)
 	}
 	return result, nil
 }

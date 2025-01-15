@@ -21,6 +21,15 @@ func TestGetLConv(t *testing.T) {
 		assert.EqualValues(t, 2, lconv.FracDigits)
 	})
 
+	t.Run("ja_JP", func(t *testing.T) {
+		lconv, err := locale.GetLConv("ja_JP")
+		assert.NoError(t, err, "should not return an error for ja_JP")
+		assert.Subset(t, lconv.IntCurrSymbol, []byte("JPY"))
+		assert.Equal(t, []byte("."), lconv.DecimalPoint)
+		assert.Equal(t, []byte(","), lconv.ThousandsSep)
+		assert.EqualValues(t, 0, lconv.FracDigits)
+	})
+
 	t.Run("thread safety", func(t *testing.T) {
 		// This test should be run with the --race flag. It will make sure that we
 		// do not run into a race condition when we are calling the same locale from

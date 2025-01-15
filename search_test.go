@@ -14,4 +14,9 @@ func TestGetInstalledLocales(t *testing.T) {
 		result := locale.GetInstalledLocales()
 		assert.Contains(t, result, "en_US", "must contain the en_US locale")
 	})
+
+	t.Run("ja_JP must be installed", func(t *testing.T) {
+		result := locale.GetInstalledLocales()
+		assert.Contains(t, result, "ja_JP", "must contain the ja_JP locale")
+	})
 }
