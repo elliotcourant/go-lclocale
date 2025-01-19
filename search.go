@@ -23,7 +23,8 @@ var (
 	localeMapping = map[string]string{}
 	// currencyMapping is a map keyed by the international currency code with the
 	// value being an array of locale's that use that currency.
-	currencyMapping = map[string][]string{}
+	currencyMapping     = map[string][]string{}
+	installedCurrencies = []string{}
 )
 
 func init() {
@@ -73,9 +74,11 @@ func init() {
 			currencyMapping[currencyCode] = append(currencyLocales, shortCode)
 		} else {
 			currencyMapping[currencyCode] = []string{shortCode}
+			installedCurrencies = append(installedCurrencies, currencyCode)
 		}
 	}
 	sort.Strings(installedLocales)
+	sort.Strings(installedCurrencies)
 }
 
 // GetInstalledLocales will return an array of locales that are accepted by the

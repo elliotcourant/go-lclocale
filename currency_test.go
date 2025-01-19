@@ -26,3 +26,20 @@ func TestFractionalDigits(t *testing.T) {
 		assert.EqualValues(t, 0, fraction)
 	})
 }
+
+func TestGetInstalledCurrencies(t *testing.T) {
+	t.Run("USD", func(t *testing.T) {
+		installed := GetInstalledCurrencies()
+		assert.Contains(t, installed, "USD", "must contain USD currency")
+	})
+
+	t.Run("EUR", func(t *testing.T) {
+		installed := GetInstalledCurrencies()
+		assert.Contains(t, installed, "EUR", "must contain EUR currency")
+	})
+
+	t.Run("JPY", func(t *testing.T) {
+		installed := GetInstalledCurrencies()
+		assert.Contains(t, installed, "JPY", "must contain JPY currency")
+	})
+}

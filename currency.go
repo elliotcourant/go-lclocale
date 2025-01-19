@@ -25,3 +25,10 @@ func GetCurrencyInternationalFractionalDigits(currency string) (int64, error) {
 
 	return int64(lconv.IntFracDigits), nil
 }
+
+// GetInstalledCurrencies returns a list of ISO currency codes that the current
+// system has information on. Currency codes not in this list may still be valid
+// but the current system has no information on them.
+func GetInstalledCurrencies() []string {
+	return installedCurrencies
+}
